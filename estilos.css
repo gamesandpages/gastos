@@ -98,3 +98,49 @@ button:hover {
 .boton-borrar:hover {
     background-color: #fbeceb;
 }
+.totales {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 16px;
+}
+.total {
+    background-color: #e7f3f1;
+    border-radius: 8px;
+    padding: 12px;
+}
+.total-etiqueta {
+    display: block;
+    font-size: 0.85rem;
+    color: #6b7c7a;
+}
+.total-numero {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #0e7466;
+    overflow-wrap: anywhere;
+}
+.tarjeta h3 {
+    margin: 20px 0 8px;
+    font-size: 1rem;
+}
+.tabla {
+    width: 100%;
+    border-collapse: collapse;
+}
+.tabla th,
+.tabla td {
+    padding: 8px 4px;
+    border-bottom: 1px solid #e3ebe9;
+    text-align: left;
+}
+.tabla th {
+    font-size: 0.85rem;
+    color: #6b7c7a;
+}
+.tabla th:not(:first-child),
+.tabla td:not(:first-child) {
+    text-align: right;
+    white-space: nowrap;
+}

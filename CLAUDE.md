@@ -11,6 +11,7 @@ Página para anotar gastos y ver cuánto llevo gastado en el mes.
 - Monedas: colones (₡) y dólares ($). Los totales van separados por moneda; no se convierte una en otra.
 - Categorías fijas: Comida, Transporte, Casa, Servicios, Ocio, Otros.
 - Un presupuesto mensual por moneda. La barra se pone roja si me paso.
+- Selector de mes arriba: los totales y la lista muestran solo el mes elegido (arranca en el mes actual).
 
 ## Cómo se corre
 Abre `index.html` con doble clic en el navegador.
@@ -23,9 +24,9 @@ Abre `index.html` con doble clic en el navegador.
 ## Plan
 1. [x] Preparar el proyecto (carpeta, git, archivos base).
 2. [x] Formulario y lista de gastos, guardados en localStorage, con botón para borrar.
-3. [ ] Total del mes por moneda y total por categoría.
+3. [x] Total del mes por moneda y total por categoría.
 4. [ ] Presupuesto con alerta (barra que se pone roja).
 5. [ ] Pulir para celular y publicar.
 
 ## Próximo paso
-Paso 3: total del mes por moneda y total por categoría.
+Paso 4: presupuesto mensual por moneda con barra que se pone roja si me paso.

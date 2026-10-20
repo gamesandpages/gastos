@@ -5,6 +5,19 @@ const hoy = new Date();
 hoy.setMinutes(hoy.getMinutes() - hoy.getTimezoneOffset());
 document.getElementById("fecha").value = hoy.toISOString().slice(0, 10);
 
+// El selector de mes arranca en el mes actual ("2026-10").
+const MES_ACTUAL = hoy.toISOString().slice(0, 7);
+const mesInput = document.getElementById("mes");
+mesInput.value = MES_ACTUAL;
+
+mesInput.addEventListener("change", function () {
+    // Si alguien borra el mes, volvemos al actual.
+    if (!mesInput.value) {
+        mesInput.value = MES_ACTUAL;
+    }
+    mostrarGastos();
+});
+
 // --- Guardar gastos en localStorage ---
 // localStorage solo guarda texto, así que convertimos la lista
 // a texto con JSON.stringify y de vuelta con JSON.parse.
@@ -21,6 +34,14 @@ function guardarGastos(gastos) {
 
 const form = document.getElementById("form-gasto");
 
+// Los campos de número aceptan "e" (notación científica: 2e5 = 200000), "+" y "-".
+// En un monto eso solo causa errores, así que bloqueamos esas teclas.
+document.getElementById("monto").addEventListener("keydown", function (evento) {
+    if (["e", "E", "+", "-"].includes(evento.key)) {
+        evento.preventDefault();
+    }
+});
+
 form.addEventListener("submit", function (evento) {
     // Evita que la página se recargue al enviar el formulario.
     evento.preventDefault();
@@ -36,6 +57,9 @@ form.addEventListener("submit", function (evento) {
     const gastos = leerGastos();
     gastos.push(gasto);
     guardarGastos(gastos);
+
+    // Saltamos al mes del gasto, para que se vea en la lista aunque sea de otro mes.
+    mesInput.value = gasto.fecha.slice(0, 7);
     mostrarGastos();
 
     // Limpia el monto para anotar el siguiente; lo demás se queda igual.
@@ -63,7 +87,10 @@ function formatearFecha(fecha) {
 
 function mostrarGastos() {
     const lista = document.getElementById("lista-gastos");
-    const gastos = leerGastos();
+    // Solo los gastos del mes elegido: "2026-10-20" empieza con "2026-10".
+    const gastos = leerGastos().filter(function (gasto) {
+        return gasto.fecha.startsWith(mesInput.value);
+    });
 
     // Más nuevo primero: por fecha y, si es el mismo día, por orden de anotado.
     gastos.sort(function (a, b) {
@@ -107,6 +134,53 @@ function mostrarGastos() {
 
         item.append(info, derecha);
         lista.append(item);
+    });
+
+    mostrarTotales(gastos);
+}
+
+// --- Totales del mes ---
+function mostrarTotales(gastos) {
+    // Sumamos por moneda y, dentro de cada categoría, también por moneda.
+    const totales = { CRC: 0, USD: 0 };
+    const porCategoria = {};
+
+    gastos.forEach(function (gasto) {
+        totales[gasto.moneda] += gasto.monto;
+        if (!porCategoria[gasto.categoria]) {
+            porCategoria[gasto.categoria] = { CRC: 0, USD: 0 };
+        }
+        porCategoria[gasto.categoria][gasto.moneda] += gasto.monto;
+    });
+
+    document.getElementById("total-CRC").textContent = formatearMonto(totales.CRC, "CRC");
+    document.getElementById("total-USD").textContent = formatearMonto(totales.USD, "USD");
+
+    // De mayor a menor: primero por colones y, si empatan, por dólares.
+    const categorias = Object.keys(porCategoria);
+    categorias.sort(function (a, b) {
+        return (porCategoria[b].CRC - porCategoria[a].CRC) ||
+               (porCategoria[b].USD - porCategoria[a].USD);
+    });
+
+    const cuerpo = document.getElementById("cuerpo-categorias");
+    cuerpo.innerHTML = "";
+    document.getElementById("tabla-categorias").hidden = categorias.length === 0;
+    document.getElementById("sin-categorias").hidden = categorias.length > 0;
+
+    categorias.forEach(function (nombre) {
+        const fila = document.createElement("tr");
+        const celdas = [
+            nombre,
+            porCategoria[nombre].CRC ? formatearMonto(porCategoria[nombre].CRC, "CRC") : "—",
+            porCategoria[nombre].USD ? formatearMonto(porCategoria[nombre].USD, "USD") : "—"
+        ];
+        celdas.forEach(function (texto) {
+            const celda = document.createElement("td");
+            celda.textContent = texto;
+            fila.append(celda);
+        });
+        cuerpo.append(fila);
     });
 }
 

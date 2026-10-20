@@ -9,6 +9,33 @@
 <body>
     <main class="contenedor">
         <h1>Mis gastos del mes</h1>
+        <section class="tarjeta">
+            <h2>Resumen</h2>
+
+            <label for="mes">Mes</label>
+            <input type="month" id="mes" required>
+
+            <div class="totales">
+                <div class="total">
+                    <span class="total-etiqueta">Colones</span>
+                    <span id="total-CRC" class="total-numero">₡0</span>
+                </div>
+                <div class="total">
+                    <span class="total-etiqueta">Dólares</span>
+                    <span id="total-USD" class="total-numero">$0</span>
+                </div>
+            </div>
+
+            <h3>Por categoría</h3>
+            <p id="sin-categorias" class="vacio">Sin gastos en este mes.</p>
+            <table id="tabla-categorias" class="tabla">
+                <thead>
+                    <tr><th>Categoría</th><th>₡</th><th>$</th></tr>
+                </thead>
+                <tbody id="cuerpo-categorias"></tbody>
+            </table>
+        </section>
+
         <form id="form-gasto" class="tarjeta">
             <h2>Nuevo gasto</h2>
 
@@ -39,7 +66,7 @@
 
         <section class="tarjeta">
             <h2>Mis gastos</h2>
-            <p id="sin-gastos" class="vacio">Todavía no anotaste ningún gasto.</p>
+            <p id="sin-gastos" class="vacio">No hay gastos en este mes.</p>
             <ul id="lista-gastos" class="lista"></ul>
         </section>
     </main>
