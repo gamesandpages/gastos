@@ -5,30 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mis gastos del mes</title>
     <meta name="description" content="Anota tus gastos y mira cuánto llevas gastado en el mes.">
-    <!-- Color de la barra de arriba del navegador en el celular -->
-    <meta name="theme-color" content="#0e7466">
+    <!-- Color de la barra de arriba del navegador en el celular (claro y oscuro) -->
+    <meta name="theme-color" content="#0e7466" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#0b4a42" media="(prefers-color-scheme: dark)">
     <!-- Ícono de la pestaña: un dibujo SVG escrito directo aquí, sin archivo aparte -->
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e7466'/%3E%3Ctext x='16' y='23' font-size='20' font-family='Arial' font-weight='bold' fill='white' text-anchor='middle'%3E%E2%82%A1%3C/text%3E%3C/svg%3E">
+    <!-- Letra Inter, de Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="estilos.css">
 </head>
 <body>
-    <main class="contenedor">
-        <h1>Mis gastos del mes</h1>
-        <section class="tarjeta">
-            <h2>Resumen</h2>
+    <header class="barra-superior">
+        <div class="barra-superior-contenido">
+            <h1>Mis gastos del mes</h1>
+        </div>
+    </header>
 
-            <label for="mes">Mes</label>
-            <input type="month" id="mes" required>
+    <main class="contenedor">
+        <section class="tarjeta">
+            <div class="tarjeta-cabecera">
+                <h2>Resumen</h2>
+                <div class="selector-mes">
+                    <!-- La etiqueta no se ve, pero la leen los lectores de pantalla -->
+                    <label for="mes" class="solo-lector">Mes</label>
+                    <input type="month" id="mes" required>
+                </div>
+            </div>
 
             <div class="totales">
                 <div class="total">
-                    <span class="total-etiqueta">Colones</span>
+                    <div class="total-cabecera">
+                        <span class="total-etiqueta">Colones</span>
+                        <span id="porcentaje-CRC" class="porcentaje" hidden></span>
+                    </div>
                     <span id="total-CRC" class="total-numero">₡0</span>
                     <div id="barra-CRC" class="barra" hidden><div class="barra-relleno"></div></div>
                     <span id="texto-CRC" class="barra-texto"></span>
                 </div>
                 <div class="total">
-                    <span class="total-etiqueta">Dólares</span>
+                    <div class="total-cabecera">
+                        <span class="total-etiqueta">Dólares</span>
+                        <span id="porcentaje-USD" class="porcentaje" hidden></span>
+                    </div>
                     <span id="total-USD" class="total-numero">$0</span>
                     <div id="barra-USD" class="barra" hidden><div class="barra-relleno"></div></div>
                     <span id="texto-USD" class="barra-texto"></span>
@@ -48,29 +68,39 @@
         <form id="form-gasto" class="tarjeta">
             <h2>Nuevo gasto</h2>
 
-            <label for="monto">Monto</label>
-            <input type="number" id="monto" min="0.01" step="0.01" placeholder="Ej: 2500" required>
+            <div class="fila-campos">
+                <div>
+                    <label for="monto">Monto</label>
+                    <input type="number" id="monto" min="0.01" step="0.01" placeholder="Ej: 2500" required>
+                </div>
+                <div>
+                    <label for="moneda">Moneda</label>
+                    <select id="moneda">
+                        <option value="CRC">Colones (₡)</option>
+                        <option value="USD">Dólares ($)</option>
+                    </select>
+                </div>
+            </div>
 
-            <label for="moneda">Moneda</label>
-            <select id="moneda">
-                <option value="CRC">Colones (₡)</option>
-                <option value="USD">Dólares ($)</option>
-            </select>
+            <div class="fila-campos">
+                <div>
+                    <label for="categoria">Categoría</label>
+                    <select id="categoria">
+                        <option>Comida</option>
+                        <option>Transporte</option>
+                        <option>Casa</option>
+                        <option>Servicios</option>
+                        <option>Ocio</option>
+                        <option>Otros</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="fecha">Fecha</label>
+                    <input type="date" id="fecha" required>
+                </div>
+            </div>
 
-            <label for="categoria">Categoría</label>
-            <select id="categoria">
-                <option>Comida</option>
-                <option>Transporte</option>
-                <option>Casa</option>
-                <option>Servicios</option>
-                <option>Ocio</option>
-                <option>Otros</option>
-            </select>
-
-            <label for="fecha">Fecha</label>
-            <input type="date" id="fecha" required>
-
-            <button type="submit">Agregar</button>
+            <button type="submit">Agregar gasto</button>
         </form>
 
         <section class="tarjeta">
@@ -83,11 +113,16 @@
             <h2>Presupuesto mensual</h2>
             <p class="vacio">Sirve para todos los meses. Déjalo vacío si no quieres presupuesto en esa moneda.</p>
 
-            <label for="presupuesto-CRC">En colones (₡)</label>
-            <input type="number" id="presupuesto-CRC" min="0" step="0.01" placeholder="Sin presupuesto">
-
-            <label for="presupuesto-USD">En dólares ($)</label>
-            <input type="number" id="presupuesto-USD" min="0" step="0.01" placeholder="Sin presupuesto">
+            <div class="fila-campos">
+                <div>
+                    <label for="presupuesto-CRC">En colones (₡)</label>
+                    <input type="number" id="presupuesto-CRC" min="0" step="0.01" placeholder="Sin presupuesto">
+                </div>
+                <div>
+                    <label for="presupuesto-USD">En dólares ($)</label>
+                    <input type="number" id="presupuesto-USD" min="0" step="0.01" placeholder="Sin presupuesto">
+                </div>
+            </div>
 
             <button type="submit">Guardar presupuesto</button>
             <p id="presupuesto-guardado" class="mensaje-ok" hidden>Presupuesto guardado.</p>

@@ -220,10 +220,12 @@ function guardarPresupuesto(presupuesto) {
 function mostrarBarra(moneda, gastado, limite) {
     const barra = document.getElementById("barra-" + moneda);
     const texto = document.getElementById("texto-" + moneda);
+    const etiqueta = document.getElementById("porcentaje-" + moneda);
 
-    // Sin presupuesto en esta moneda: no hay barra.
+    // Sin presupuesto en esta moneda: no hay barra ni porcentaje.
     if (!limite) {
         barra.hidden = true;
+        etiqueta.hidden = true;
         texto.textContent = "";
         return;
     }
@@ -239,6 +241,12 @@ function mostrarBarra(moneda, gastado, limite) {
     barra.classList.toggle("aviso", porcentaje >= 80 && !pasado);
     barra.classList.toggle("pasado", pasado);
     texto.classList.toggle("pasado", pasado);
+
+    // Etiqueta con el porcentaje usado, del mismo color que la barra.
+    etiqueta.hidden = false;
+    etiqueta.textContent = Math.round(porcentaje) + "%";
+    etiqueta.classList.toggle("aviso", porcentaje >= 80 && !pasado);
+    etiqueta.classList.toggle("pasado", pasado);
 
     if (pasado) {
         texto.textContent = "Te pasaste por " + formatearMonto(exceso, moneda);

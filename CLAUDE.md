@@ -18,6 +18,7 @@ https://gamesandpages.github.io/gastos/
 - Un presupuesto mensual por moneda, el mismo para todos los meses. La barra se pone naranja al 80% y roja si me paso.
 - Selector de mes arriba: los totales y la lista muestran solo el mes elegido (arranca en el mes actual).
 - Los campos de número bloquean `e`, `+` y `-`.
+- Diseño: barra superior delgada con el título, letra Inter, colores en variables CSS y modo oscuro automático (según el celular o la compu).
 
 ## Cómo se corre
 - En la compu: abre `index.html` con doble clic en el navegador.

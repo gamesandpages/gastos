@@ -1,194 +1,383 @@
+/* --- Colores ---
+   Todos los colores viven aquí como variables (--nombre).
+   El modo oscuro solo cambia estos valores; el resto del archivo no se toca. */
+:root {
+    /* Le avisa al navegador que tenemos claro y oscuro: así los calendarios
+       y listas desplegables también cambian de color solos. */
+    color-scheme: light dark;
+
+    --fondo: #f3f6f5;
+    --superficie: #ffffff;
+    --superficie-suave: #f0f6f4;
+    --borde: #e2e9e7;
+    --texto: #14211f;
+    --texto-suave: #61716e;
+    --primario: #0e7466;
+    --primario-hover: #0b5d52;
+    --primario-suave: #e1f1ee;
+    --texto-sobre-primario: #ffffff;
+    --aviso: #c2410c;
+    --aviso-suave: #fdeee4;
+    --peligro: #c62828;
+    --peligro-suave: #fdecea;
+    --sombra: 0 1px 2px rgba(16, 40, 36, 0.04), 0 6px 20px rgba(16, 40, 36, 0.06);
+    --encabezado: linear-gradient(135deg, #0e7466 0%, #0a5249 100%);
+}
+
+/* Si el celular o la compu están en modo oscuro, usamos estos valores. */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --fondo: #0c1312;
+        --superficie: #141e1c;
+        --superficie-suave: #1a2725;
+        --borde: #253432;
+        --texto: #e6eeec;
+        --texto-suave: #93a5a1;
+        /* En fondo oscuro el verde azulado necesita ser más claro para leerse. */
+        --primario: #2bb3a0;
+        --primario-hover: #45c6b3;
+        --primario-suave: #16332f;
+        --texto-sobre-primario: #04201c;
+        --aviso: #fb923c;
+        --aviso-suave: #3a2416;
+        --peligro: #f26b6b;
+        --peligro-suave: #3a1c1c;
+        --sombra: 0 1px 2px rgba(0, 0, 0, 0.4);
+        --encabezado: linear-gradient(135deg, #0b4a42 0%, #072f2a 100%);
+    }
+}
+
+/* --- Base --- */
 body {
     margin: 0;
-    font-family: "Segoe UI", Arial, sans-serif;
-    background-color: #f1f5f4;
-    color: #1d2b2a;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    background-color: var(--fondo);
+    color: var(--texto);
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
 }
-.contenedor {
+
+/* --- Barra superior --- */
+.barra-superior {
+    /* sticky: la barra se queda pegada arriba al bajar por la página. */
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    /* Menos relleno a los lados que las tarjetas (8px contra 16px):
+       así la barra queda un poco más ancha que ellas. */
+    padding: 12px 8px 0;
+    background-color: var(--fondo);
+}
+.barra-superior-contenido {
     max-width: 600px;
     margin: 0 auto;
-    padding: 20px 16px;
+    box-sizing: border-box;
+    padding: 0 16px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    background: var(--encabezado);
+    color: #ffffff;
+    border-radius: 14px;
+    box-shadow: var(--sombra);
 }
 h1 {
-    color: #0e7466;
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+/* --- Contenedor y tarjetas --- */
+.contenedor {
+    max-width: 600px;
+    margin: 16px auto 0;
+    padding: 0 16px 32px;
+}
+/* Título de la tarjeta a la izquierda y el selector de mes a la derecha. */
+.tarjeta-cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+.tarjeta-cabecera h2 {
+    margin: 0;
+}
+.selector-mes input {
+    width: auto;
+    min-width: 160px;
+}
+/* Esconde algo a la vista pero lo deja para lectores de pantalla. */
+.solo-lector {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
 }
 .tarjeta {
-    background-color: #ffffff;
-    border-radius: 10px;
-    padding: 16px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    background-color: var(--superficie);
+    border: 1px solid var(--borde);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: var(--sombra);
+}
+.tarjeta + .tarjeta {
+    margin-top: 16px;
 }
 .tarjeta h2 {
-    margin-top: 0;
-    font-size: 1.2rem;
+    margin: 0 0 4px;
+    font-size: 1.05rem;
+    font-weight: 600;
 }
+.tarjeta h3 {
+    margin: 24px 0 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--texto-suave);
+}
+.vacio {
+    margin: 8px 0 0;
+    font-size: 0.9rem;
+    color: var(--texto-suave);
+}
+
+/* --- Formularios --- */
 label {
     display: block;
-    margin-top: 12px;
-    margin-bottom: 4px;
-    font-weight: 600;
+    margin-top: 14px;
+    margin-bottom: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--texto-suave);
 }
 input,
 select {
     width: 100%;
     box-sizing: border-box;
-    padding: 10px;
+    /* 44px es el alto mínimo recomendado para tocar cómodo con el dedo.
+       También evita que el campo de fecha se vea aplastado en iPhone. */
+    min-height: 44px;
+    padding: 10px 12px;
+    font-family: inherit;
     font-size: 1rem;
-    border: 1px solid #c5d3d1;
-    border-radius: 6px;
+    color: var(--texto);
+    background-color: var(--superficie);
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+input:focus,
+select:focus {
+    outline: none;
+    border-color: var(--primario);
+    box-shadow: 0 0 0 3px var(--primario-suave);
+}
+/* Dos campos lado a lado (Monto | Moneda, Categoría | Fecha). */
+.fila-campos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
 }
 button {
-    margin-top: 16px;
+    margin-top: 20px;
     width: 100%;
+    min-height: 48px;
     padding: 12px;
+    font-family: inherit;
     font-size: 1rem;
-    color: #ffffff;
-    background-color: #0e7466;
+    font-weight: 600;
+    color: var(--texto-sobre-primario);
+    background-color: var(--primario);
     border: none;
-    border-radius: 6px;
+    border-radius: 10px;
     cursor: pointer;
+    transition: background-color 0.15s, transform 0.1s;
 }
 button:hover {
-    background-color: #0b5d52;
+    background-color: var(--primario-hover);
 }
-.tarjeta + .tarjeta {
-    margin-top: 20px;
+button:active {
+    transform: scale(0.98);
 }
-.vacio {
-    color: #6b7c7a;
-}
-.lista {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-.lista li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid #e3ebe9;
-}
-.lista li:last-child {
-    border-bottom: none;
-}
-.gasto-detalle {
+.mensaje-ok {
+    margin: 12px 0 0;
     font-size: 0.9rem;
-    color: #6b7c7a;
-}
-.gasto-monto {
     font-weight: 600;
-    white-space: nowrap;
+    color: var(--primario);
 }
-.gasto-derecha {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-.boton-borrar {
-    margin: 0;
-    width: 36px;
-    height: 36px;
-    padding: 0;
-    font-size: 1rem;
-    color: #b3261e;
-    background-color: transparent;
-    border: 1px solid #e3c4c1;
-}
-.boton-borrar:hover {
-    background-color: #fbeceb;
-}
+
+/* --- Totales --- */
 .totales {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
-    margin-top: 16px;
+    margin-top: 14px;
 }
 .total {
-    background-color: #e7f3f1;
-    border-radius: 8px;
-    padding: 12px;
+    background-color: var(--superficie-suave);
+    border-radius: 12px;
+    padding: 14px;
+}
+.total-cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
 }
 .total-etiqueta {
-    display: block;
-    font-size: 0.85rem;
-    color: #6b7c7a;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--texto-suave);
 }
 .total-numero {
     display: block;
-    font-size: 1.5rem;
+    margin-top: 6px;
+    font-size: 1.6rem;
     font-weight: 700;
-    color: #0e7466;
+    letter-spacing: -0.02em;
+    /* Todos los dígitos del mismo ancho: los números no "bailan" al cambiar. */
+    font-variant-numeric: tabular-nums;
     overflow-wrap: anywhere;
 }
-.tarjeta h3 {
-    margin: 20px 0 8px;
-    font-size: 1rem;
+/* Etiqueta redonda con el porcentaje usado del presupuesto. */
+.porcentaje {
+    padding: 2px 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--primario);
+    background-color: var(--primario-suave);
+    border-radius: 999px;
 }
+.porcentaje.aviso {
+    color: var(--aviso);
+    background-color: var(--aviso-suave);
+}
+.porcentaje.pasado {
+    color: var(--peligro);
+    background-color: var(--peligro-suave);
+}
+
+/* --- Barra de presupuesto --- */
+.barra {
+    height: 6px;
+    margin-top: 12px;
+    background-color: var(--borde);
+    border-radius: 999px;
+    overflow: hidden;
+}
+.barra-relleno {
+    width: 0;
+    height: 100%;
+    background-color: var(--primario);
+    border-radius: 999px;
+    transition: width 0.4s ease;
+}
+.barra.aviso .barra-relleno {
+    background-color: var(--aviso);
+}
+.barra.pasado .barra-relleno {
+    background-color: var(--peligro);
+}
+.barra-texto {
+    display: block;
+    margin-top: 6px;
+    font-size: 0.8rem;
+    color: var(--texto-suave);
+    font-variant-numeric: tabular-nums;
+}
+.barra-texto.pasado {
+    color: var(--peligro);
+    font-weight: 600;
+}
+
+/* --- Tabla por categoría --- */
 .tabla {
     width: 100%;
     border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
 }
 .tabla th,
 .tabla td {
-    padding: 8px 4px;
-    border-bottom: 1px solid #e3ebe9;
+    padding: 10px 4px;
+    border-bottom: 1px solid var(--borde);
     text-align: left;
 }
+.tabla tr:last-child td {
+    border-bottom: none;
+}
 .tabla th {
-    font-size: 0.85rem;
-    color: #6b7c7a;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--texto-suave);
 }
 .tabla th:not(:first-child),
 .tabla td:not(:first-child) {
     text-align: right;
     white-space: nowrap;
 }
-.barra {
-    height: 8px;
-    margin-top: 8px;
-    background-color: #d5e3e0;
-    border-radius: 4px;
-    overflow: hidden;
+
+/* --- Lista de gastos --- */
+.lista {
+    list-style: none;
+    margin: 8px 0 0;
+    padding: 0;
 }
-.barra-relleno {
-    width: 0;
-    height: 100%;
-    background-color: #0e7466;
-    transition: width 0.3s;
+.lista li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--borde);
 }
-.barra.aviso .barra-relleno {
-    background-color: #e08a00;
+.lista li:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
 }
-.barra.pasado .barra-relleno {
-    background-color: #c62828;
+.gasto-detalle {
+    font-size: 0.85rem;
+    color: var(--texto-suave);
 }
-.barra-texto {
-    display: block;
-    margin-top: 4px;
-    font-size: 0.8rem;
-    color: #6b7c7a;
-}
-.barra-texto.pasado {
-    color: #c62828;
+.gasto-monto {
     font-weight: 600;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
 }
-.mensaje-ok {
-    margin: 10px 0 0;
-    color: #0e7466;
-    font-weight: 600;
+.gasto-derecha {
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
-/* --- Ajustes para celular --- */
-/* 44px es el alto mínimo recomendado para tocar cómodo con el dedo.
-   También evita que el campo de fecha se vea aplastado en iPhone. */
-input,
-select {
-    min-height: 44px;
-    background-color: #ffffff;
+.boton-borrar {
+    margin: 0;
+    width: 36px;
+    min-height: 36px;
+    height: 36px;
+    padding: 0;
+    font-size: 0.9rem;
+    color: var(--texto-suave);
+    background-color: transparent;
+    border-radius: 8px;
 }
-/* En pantallas muy angostas los números grandes no caben. */
+.boton-borrar:hover {
+    color: var(--peligro);
+    background-color: var(--peligro-suave);
+}
+
+/* --- Pantallas muy angostas --- */
 @media (max-width: 360px) {
     .total-numero {
-        font-size: 1.25rem;
+        font-size: 1.3rem;
+    }
+    .fila-campos {
+        grid-template-columns: 1fr;
+        gap: 0;
     }
 }
