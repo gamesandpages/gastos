@@ -12,3 +12,89 @@ body {
 h1 {
     color: #0e7466;
 }
+.tarjeta {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 16px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+.tarjeta h2 {
+    margin-top: 0;
+    font-size: 1.2rem;
+}
+label {
+    display: block;
+    margin-top: 12px;
+    margin-bottom: 4px;
+    font-weight: 600;
+}
+input,
+select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #c5d3d1;
+    border-radius: 6px;
+}
+button {
+    margin-top: 16px;
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    color: #ffffff;
+    background-color: #0e7466;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #0b5d52;
+}
+.tarjeta + .tarjeta {
+    margin-top: 20px;
+}
+.vacio {
+    color: #6b7c7a;
+}
+.lista {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.lista li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #e3ebe9;
+}
+.lista li:last-child {
+    border-bottom: none;
+}
+.gasto-detalle {
+    font-size: 0.9rem;
+    color: #6b7c7a;
+}
+.gasto-monto {
+    font-weight: 600;
+    white-space: nowrap;
+}
+.gasto-derecha {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.boton-borrar {
+    margin: 0;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    font-size: 1rem;
+    color: #b3261e;
+    background-color: transparent;
+    border: 1px solid #e3c4c1;
+}
+.boton-borrar:hover {
+    background-color: #fbeceb;
+}
