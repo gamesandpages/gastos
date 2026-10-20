@@ -178,3 +178,17 @@ button:hover {
     color: #0e7466;
     font-weight: 600;
 }
+/* --- Ajustes para celular --- */
+/* 44px es el alto mínimo recomendado para tocar cómodo con el dedo.
+   También evita que el campo de fecha se vea aplastado en iPhone. */
+input,
+select {
+    min-height: 44px;
+    background-color: #ffffff;
+}
+/* En pantallas muy angostas los números grandes no caben. */
+@media (max-width: 360px) {
+    .total-numero {
+        font-size: 1.25rem;
+    }
+}
