@@ -144,3 +144,37 @@ button:hover {
     text-align: right;
     white-space: nowrap;
 }
+.barra {
+    height: 8px;
+    margin-top: 8px;
+    background-color: #d5e3e0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+.barra-relleno {
+    width: 0;
+    height: 100%;
+    background-color: #0e7466;
+    transition: width 0.3s;
+}
+.barra.aviso .barra-relleno {
+    background-color: #e08a00;
+}
+.barra.pasado .barra-relleno {
+    background-color: #c62828;
+}
+.barra-texto {
+    display: block;
+    margin-top: 4px;
+    font-size: 0.8rem;
+    color: #6b7c7a;
+}
+.barra-texto.pasado {
+    color: #c62828;
+    font-weight: 600;
+}
+.mensaje-ok {
+    margin: 10px 0 0;
+    color: #0e7466;
+    font-weight: 600;
+}

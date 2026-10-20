@@ -19,10 +19,14 @@
                 <div class="total">
                     <span class="total-etiqueta">Colones</span>
                     <span id="total-CRC" class="total-numero">₡0</span>
+                    <div id="barra-CRC" class="barra" hidden><div class="barra-relleno"></div></div>
+                    <span id="texto-CRC" class="barra-texto"></span>
                 </div>
                 <div class="total">
                     <span class="total-etiqueta">Dólares</span>
                     <span id="total-USD" class="total-numero">$0</span>
+                    <div id="barra-USD" class="barra" hidden><div class="barra-relleno"></div></div>
+                    <span id="texto-USD" class="barra-texto"></span>
                 </div>
             </div>
 
@@ -69,6 +73,20 @@
             <p id="sin-gastos" class="vacio">No hay gastos en este mes.</p>
             <ul id="lista-gastos" class="lista"></ul>
         </section>
+
+        <form id="form-presupuesto" class="tarjeta">
+            <h2>Presupuesto mensual</h2>
+            <p class="vacio">Sirve para todos los meses. Déjalo vacío si no quieres presupuesto en esa moneda.</p>
+
+            <label for="presupuesto-CRC">En colones (₡)</label>
+            <input type="number" id="presupuesto-CRC" min="0" step="0.01" placeholder="Sin presupuesto">
+
+            <label for="presupuesto-USD">En dólares ($)</label>
+            <input type="number" id="presupuesto-USD" min="0" step="0.01" placeholder="Sin presupuesto">
+
+            <button type="submit">Guardar presupuesto</button>
+            <p id="presupuesto-guardado" class="mensaje-ok" hidden>Presupuesto guardado.</p>
+        </form>
     </main>
     <script src="app.js"></script>
 </body>
