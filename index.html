@@ -23,8 +23,11 @@
         </div>
     </header>
 
+    <!-- En la compu: dos columnas (principal a la izquierda, formularios a la derecha).
+         En el celular: una sola columna, en el orden de las clases bloque-*. -->
     <main class="contenedor">
-        <section class="tarjeta">
+      <div class="columna-principal">
+        <section class="tarjeta bloque-resumen">
             <div class="tarjeta-cabecera">
                 <h2>Resumen</h2>
                 <div class="selector-mes">
@@ -65,7 +68,15 @@
             </table>
         </section>
 
-        <form id="form-gasto" class="tarjeta">
+        <section class="tarjeta bloque-lista">
+            <h2>Mis gastos</h2>
+            <p id="sin-gastos" class="vacio">No hay gastos en este mes.</p>
+            <ul id="lista-gastos" class="lista"></ul>
+        </section>
+      </div>
+
+      <aside class="columna-lateral">
+        <form id="form-gasto" class="tarjeta bloque-nuevo">
             <h2>Nuevo gasto</h2>
 
             <div class="fila-campos">
@@ -103,13 +114,7 @@
             <button type="submit">Agregar gasto</button>
         </form>
 
-        <section class="tarjeta">
-            <h2>Mis gastos</h2>
-            <p id="sin-gastos" class="vacio">No hay gastos en este mes.</p>
-            <ul id="lista-gastos" class="lista"></ul>
-        </section>
-
-        <form id="form-presupuesto" class="tarjeta">
+        <form id="form-presupuesto" class="tarjeta bloque-presupuesto">
             <h2>Presupuesto mensual</h2>
             <p class="vacio">Sirve para todos los meses. Déjalo vacío si no quieres presupuesto en esa moneda.</p>
 
@@ -127,6 +132,7 @@
             <button type="submit">Guardar presupuesto</button>
             <p id="presupuesto-guardado" class="mensaje-ok" hidden>Presupuesto guardado.</p>
         </form>
+      </aside>
     </main>
     <script src="app.js"></script>
 </body>

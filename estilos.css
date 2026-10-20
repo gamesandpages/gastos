@@ -22,6 +22,14 @@
     --peligro-suave: #fdecea;
     --sombra: 0 1px 2px rgba(16, 40, 36, 0.04), 0 6px 20px rgba(16, 40, 36, 0.06);
     --encabezado: linear-gradient(135deg, #0e7466 0%, #0a5249 100%);
+
+    /* Un color por categoría */
+    --cat-comida: #e07a1f;
+    --cat-transporte: #2f74d0;
+    --cat-casa: #8a4fc4;
+    --cat-servicios: #c99a06;
+    --cat-ocio: #d63f8c;
+    --cat-otros: #6f7f7c;
 }
 
 /* Si el celular o la compu están en modo oscuro, usamos estos valores. */
@@ -44,6 +52,13 @@
         --peligro-suave: #3a1c1c;
         --sombra: 0 1px 2px rgba(0, 0, 0, 0.4);
         --encabezado: linear-gradient(135deg, #0b4a42 0%, #072f2a 100%);
+
+        --cat-comida: #f59a4a;
+        --cat-transporte: #5b9bf0;
+        --cat-casa: #b388e6;
+        --cat-servicios: #f0c43c;
+        --cat-ocio: #f06aae;
+        --cat-otros: #9fb0ac;
     }
 }
 
@@ -89,10 +104,48 @@ h1 {
 }
 
 /* --- Contenedor y tarjetas --- */
+/* En el celular: una columna. "display: contents" hace que las dos columnas
+   "desaparezcan" y las tarjetas queden sueltas, así podemos ordenarlas con order. */
 .contenedor {
     max-width: 600px;
     margin: 16px auto 0;
     padding: 0 16px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.columna-principal,
+.columna-lateral {
+    display: contents;
+}
+.bloque-resumen { order: 1; }
+.bloque-nuevo { order: 2; }
+.bloque-lista { order: 3; }
+.bloque-presupuesto { order: 4; }
+
+/* En la compu (pantallas de 900px o más): dos columnas. */
+@media (min-width: 900px) {
+    .contenedor,
+    .barra-superior-contenido {
+        max-width: 1100px;
+    }
+    .contenedor {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 380px;
+        gap: 20px;
+        align-items: start;
+    }
+    .columna-principal,
+    .columna-lateral {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    /* Los formularios se quedan a la vista al bajar por la lista. */
+    .columna-lateral {
+        position: sticky;
+        top: 80px;
+    }
 }
 /* Título de la tarjeta a la izquierda y el selector de mes a la derecha. */
 .tarjeta-cabecera {
@@ -123,9 +176,7 @@ h1 {
     border-radius: 16px;
     padding: 20px;
     box-shadow: var(--sombra);
-}
-.tarjeta + .tarjeta {
-    margin-top: 16px;
+    animation: aparecer 0.4s ease both;
 }
 .tarjeta h2 {
     margin: 0 0 4px;
@@ -379,5 +430,100 @@ button:active {
     .fila-campos {
         grid-template-columns: 1fr;
         gap: 0;
+    }
+    /* El selector de mes baja debajo de "Resumen" y ocupa todo el ancho. */
+    .tarjeta-cabecera {
+        flex-wrap: wrap;
+    }
+    .selector-mes,
+    .selector-mes input {
+        width: 100%;
+    }
+}
+
+/* --- Categorías: ícono y color --- */
+/* Cada clase cat-* guarda su color en --cat; los elementos lo usan después. */
+.cat-comida { --cat: var(--cat-comida); }
+.cat-transporte { --cat: var(--cat-transporte); }
+.cat-casa { --cat: var(--cat-casa); }
+.cat-servicios { --cat: var(--cat-servicios); }
+.cat-ocio { --cat: var(--cat-ocio); }
+.cat-otros { --cat: var(--cat-otros); }
+
+.icono-categoria {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    font-size: 1.1rem;
+    border-radius: 10px;
+    /* El color de la categoría, pero muy suave (16%). */
+    background-color: color-mix(in srgb, var(--cat) 16%, transparent);
+}
+.gasto-izquierda {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+.tabla td:first-child {
+    width: 100%;
+}
+.tabla .icono-categoria {
+    width: 30px;
+    height: 30px;
+    font-size: 0.9rem;
+    border-radius: 8px;
+}
+.categoria-celda {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.categoria-info {
+    flex: 1;
+    min-width: 0;
+}
+/* Barrita que muestra cuánto pesa la categoría en el mes. */
+.mini-barra {
+    height: 4px;
+    margin-top: 6px;
+    max-width: 160px;
+    background-color: var(--borde);
+    border-radius: 999px;
+    overflow: hidden;
+}
+.mini-relleno {
+    height: 100%;
+    background-color: var(--cat);
+    border-radius: 999px;
+}
+
+/* --- Animaciones --- */
+@keyframes aparecer {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+}
+@keyframes entrar {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: none; }
+}
+@keyframes salir {
+    to { opacity: 0; transform: translateX(24px); }
+}
+.lista li.entrando {
+    animation: entrar 0.35s ease;
+}
+.lista li.saliendo {
+    animation: salir 0.2s ease forwards;
+}
+/* Si la persona pidió "reducir movimiento" en su sistema, no animamos nada. */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important;
     }
 }

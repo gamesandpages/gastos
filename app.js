@@ -63,6 +63,7 @@ form.addEventListener("submit", function (evento) {
 
     // Saltamos al mes del gasto, para que se vea en la lista aunque sea de otro mes.
     mesInput.value = gasto.fecha.slice(0, 7);
+    ultimoAgregado = gasto.id;
     mostrarGastos();
 
     // Limpia el monto para anotar el siguiente; lo demás se queda igual.
@@ -72,6 +73,27 @@ form.addEventListener("submit", function (evento) {
 
 // --- Mostrar la lista de gastos ---
 const SIMBOLOS = { CRC: "₡", USD: "$" };
+
+// Ícono de cada categoría. El color está en estilos.css (clases cat-comida, cat-casa...).
+const ICONOS = {
+    Comida: "🍽️",
+    Transporte: "🚗",
+    Casa: "🏠",
+    Servicios: "💡",
+    Ocio: "🎉",
+    Otros: "📦"
+};
+
+function crearIcono(categoria) {
+    const icono = document.createElement("span");
+    icono.className = "icono-categoria cat-" + categoria.toLowerCase();
+    icono.textContent = ICONOS[categoria] || "📦";
+    icono.setAttribute("aria-hidden", "true");
+    return icono;
+}
+
+// id del gasto recién agregado, para animarlo cuando aparece en la lista.
+let ultimoAgregado = null;
 
 function formatearMonto(monto, moneda) {
     // toLocaleString pone separadores de miles: 12500 -> "12 500".
@@ -108,6 +130,9 @@ function mostrarGastos() {
 
     gastos.forEach(function (gasto) {
         const item = document.createElement("li");
+        if (gasto.id === ultimoAgregado) {
+            item.classList.add("entrando");
+        }
 
         const info = document.createElement("div");
         const categoria = document.createElement("div");
@@ -128,17 +153,22 @@ function mostrarGastos() {
         borrar.title = "Borrar gasto";
         borrar.setAttribute("aria-label", "Borrar gasto");
         borrar.addEventListener("click", function () {
-            borrarGasto(gasto.id);
+            borrarGasto(gasto.id, item);
         });
+
+        const izquierda = document.createElement("div");
+        izquierda.className = "gasto-izquierda";
+        izquierda.append(crearIcono(gasto.categoria), info);
 
         const derecha = document.createElement("div");
         derecha.className = "gasto-derecha";
         derecha.append(monto, borrar);
 
-        item.append(info, derecha);
+        item.append(izquierda, derecha);
         lista.append(item);
     });
 
+    ultimoAgregado = null;
     mostrarTotales(gastos);
 }
 
@@ -175,14 +205,45 @@ function mostrarTotales(gastos) {
     document.getElementById("tabla-categorias").hidden = categorias.length === 0;
     document.getElementById("sin-categorias").hidden = categorias.length > 0;
 
+    // Para la barrita de cada categoría: qué parte del mes representa.
+    // Como no convertimos monedas, sacamos la parte en cada moneda usada
+    // y promediamos. Si solo usaste una moneda, es su parte exacta.
+    const monedasUsadas = ["CRC", "USD"].filter(function (moneda) {
+        return totales[moneda] > 0;
+    });
+
     categorias.forEach(function (nombre) {
         const fila = document.createElement("tr");
-        const celdas = [
-            nombre,
+
+        let peso = 0;
+        monedasUsadas.forEach(function (moneda) {
+            peso += porCategoria[nombre][moneda] / totales[moneda];
+        });
+        peso = peso / monedasUsadas.length;
+
+        // Primera celda: ícono + nombre + barrita del color de la categoría.
+        const celdaNombre = document.createElement("td");
+        const contenido = document.createElement("div");
+        contenido.className = "categoria-celda";
+        const textoYBarra = document.createElement("div");
+        textoYBarra.className = "categoria-info";
+        const textoNombre = document.createElement("span");
+        textoNombre.textContent = nombre;
+        const miniBarra = document.createElement("div");
+        miniBarra.className = "mini-barra";
+        const miniRelleno = document.createElement("div");
+        miniRelleno.className = "mini-relleno cat-" + nombre.toLowerCase();
+        miniRelleno.style.width = Math.round(peso * 100) + "%";
+        miniBarra.append(miniRelleno);
+        textoYBarra.append(textoNombre, miniBarra);
+        contenido.append(crearIcono(nombre), textoYBarra);
+        celdaNombre.append(contenido);
+        fila.append(celdaNombre);
+
+        [
             porCategoria[nombre].CRC ? formatearMonto(porCategoria[nombre].CRC, "CRC") : "—",
             porCategoria[nombre].USD ? formatearMonto(porCategoria[nombre].USD, "USD") : "—"
-        ];
-        celdas.forEach(function (texto) {
+        ].forEach(function (texto) {
             const celda = document.createElement("td");
             celda.textContent = texto;
             fila.append(celda);
@@ -192,7 +253,7 @@ function mostrarTotales(gastos) {
 }
 
 // --- Borrar un gasto ---
-function borrarGasto(id) {
+function borrarGasto(id, item) {
     if (!confirm("¿Seguro que quieres borrar este gasto?")) {
         return;
     }
@@ -201,7 +262,10 @@ function borrarGasto(id) {
         return gasto.id !== id;
     });
     guardarGastos(gastos);
-    mostrarGastos();
+
+    // Primero la fila se desliza hacia afuera (0,2 s) y después redibujamos.
+    item.classList.add("saliendo");
+    setTimeout(mostrarGastos, 200);
 }
 
 // --- Presupuesto ---

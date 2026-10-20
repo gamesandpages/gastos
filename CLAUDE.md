@@ -19,6 +19,8 @@ https://gamesandpages.github.io/gastos/
 - Selector de mes arriba: los totales y la lista muestran solo el mes elegido (arranca en el mes actual).
 - Los campos de número bloquean `e`, `+` y `-`.
 - Diseño: barra superior delgada con el título, letra Inter, colores en variables CSS y modo oscuro automático (según el celular o la compu).
+- Cada categoría tiene ícono (emoji) y color propio; en la tabla, una barrita muestra cuánto pesa en el mes (promedio de su parte en cada moneda usada).
+- En la compu (900px o más) hay dos columnas: Resumen y lista a la izquierda, formularios a la derecha. En el celular, una columna.
 
 ## Cómo se corre
 - En la compu: abre `index.html` con doble clic en el navegador.
